@@ -1,0 +1,42 @@
+{
+  "name": "kelex-labs/savethedate-for-gravity-forms",
+  "description": "Calendar links for fixed Gravity Forms events.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "SaveTheDate\\": "src/"
+    }
+  },
+  "require-dev": {
+    "wp-coding-standards/wpcs": "^3.1",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "phpstan/phpstan": "^1.12",
+    "szepeviktor/phpstan-wordpress": "^1.3",
+    "phpunit/phpunit": "^9.6"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    },
+    "platform": {
+      "php": "7.4.33"
+    }
+  },
+  "scripts": {
+    "lint": "phpcs",
+    "lint:fix": "phpcbf",
+    "analyse": "phpstan analyse --debug --memory-limit=512M",
+    "test": "phpunit",
+    "check": [
+      "@lint",
+      "@analyse",
+      "@test"
+    ],
+    "build": "python3 bin/build.py"
+  }
+}

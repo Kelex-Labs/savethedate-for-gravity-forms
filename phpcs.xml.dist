@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ruleset name="SaveTheDate">
+ <description>WordPress standards and PHP 7.4 compatibility.</description>
+ <file>src</file><file>templates</file><file>savethedate-for-gravity-forms.php</file><file>uninstall.php</file>
+ <arg name="extensions" value="php"/><arg value="sp"/>
+ <config name="minimum_wp_version" value="6.2"/><config name="testVersion" value="7.4-"/>
+ <rule ref="WordPress"/><rule ref="PHPCompatibilityWP"/>
+ <rule ref="WordPress.WP.I18n"><properties><property name="text_domain" type="array"><element value="savethedate-for-gravity-forms"/></property></properties></rule>
+ <rule ref="WordPress.NamingConventions.PrefixAllGlobals"><properties><property name="prefixes" type="array"><element value="stdgf"/><element value="SaveTheDate"/></property></properties></rule>
+ <rule ref="WordPress.Files.FileName"><exclude-pattern>/src/*</exclude-pattern></rule>
+ <rule ref="PSR2.Classes.PropertyDeclaration.Underscore"><exclude-pattern>/src/AddOn.php</exclude-pattern></rule>
+</ruleset>

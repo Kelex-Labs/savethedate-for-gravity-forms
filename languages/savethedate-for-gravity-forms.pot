@@ -1,0 +1,188 @@
+# Copyright (C) 2026 Kelex Labs
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: SaveTheDate for Gravity Forms 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/free\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-13T21:15:41+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: savethedate-for-gravity-forms\n"
+
+#. Plugin Name of the plugin
+#: savethedate-for-gravity-forms.php
+msgid "SaveTheDate for Gravity Forms"
+msgstr ""
+
+#. Description of the plugin
+#: savethedate-for-gravity-forms.php
+msgid "Add calendar buttons to fixed event confirmations and emails in Gravity Forms."
+msgstr ""
+
+#. Author of the plugin
+#: savethedate-for-gravity-forms.php
+msgid "Kelex Labs"
+msgstr ""
+
+#: savethedate-for-gravity-forms.php:60
+msgid "SaveTheDate requires WordPress 6.2+, PHP 7.4+ and an active licensed copy of Gravity Forms 2.7+."
+msgstr ""
+
+#: src/AddOn.php:149
+msgid "Event title"
+msgstr ""
+
+#: src/AddOn.php:155
+msgid "All-day event"
+msgstr ""
+
+#: src/AddOn.php:160
+msgid "Start date"
+msgstr ""
+
+#: src/AddOn.php:166
+msgid "Start time"
+msgstr ""
+
+#: src/AddOn.php:176
+msgid "End date (inclusive for all-day events)"
+msgstr ""
+
+#: src/AddOn.php:183
+msgid "End time"
+msgstr ""
+
+#: src/AddOn.php:193
+msgid "Timezone"
+msgstr ""
+
+#: src/AddOn.php:197
+msgid "Choose the event timezone. Sites using a numeric UTC offset default to UTC here. Repeated autumn DST times use PHP timezone rules; choose an unambiguous time when possible."
+msgstr ""
+
+#: src/AddOn.php:201
+msgid "Location"
+msgstr ""
+
+#: src/AddOn.php:206
+msgid "Description (plain text)"
+msgstr ""
+
+#: src/AddOn.php:211
+msgid "Event URL"
+msgstr ""
+
+#: src/AddOn.php:217
+msgid "Add buttons to Text confirmations automatically"
+msgstr ""
+
+#: src/AddOn.php:224
+msgid "Event"
+msgstr ""
+
+#: src/AddOn.php:225
+msgid "Event details and calendar downloads are public. Do not enter private information."
+msgstr ""
+
+#: src/AddOn.php:229
+msgid "This form is an event"
+msgstr ""
+
+#: src/AddOn.php:235
+msgid "Event details"
+msgstr ""
+
+#: src/AddOn.php:263
+msgid "Enter valid dates and times with the end after the start. An all-day end date includes that day. Times skipped by daylight saving changes are invalid."
+msgstr ""
+
+#: src/AddOn.php:284
+msgid "This event has ended. Buttons are hidden. If you duplicated this form, update its dates."
+msgstr ""
+
+#: src/AddOn.php:288
+msgid "The configured timezone is invalid or empty. The site timezone, then UTC, is used as a fallback."
+msgstr ""
+
+#: src/AddOn.php:291
+msgid "The event dates are invalid. Buttons and downloads are hidden until you correct them."
+msgstr ""
+
+#: src/AddOn.php:322
+msgid "SaveTheDate settings"
+msgstr ""
+
+#: src/AddOn.php:326
+msgid "Button style"
+msgstr ""
+
+#: src/AddOn.php:331
+msgid "Solid"
+msgstr ""
+
+#: src/AddOn.php:335
+msgid "Outline"
+msgstr ""
+
+#: src/AddOn.php:342
+msgid "Accent color"
+msgstr ""
+
+#: src/AddOn.php:349
+msgid "Remove SaveTheDate settings on uninstall"
+msgstr ""
+
+#: src/AddOn.php:352
+msgid "Off by default. Applies separately to each site in a multisite network. Forms and entries are always preserved."
+msgstr ""
+
+#: src/AddOn.php:370
+msgid "Enter a valid hex color, such as #2455a4."
+msgstr ""
+
+#: src/AddOn.php:444
+msgid "SaveTheDate calendar buttons"
+msgstr ""
+
+#: src/Http/IcsRoute.php:67
+#: src/Http/IcsRoute.php:72
+msgid "Event not found."
+msgstr ""
+
+#: src/Output/Renderer.php:31
+msgid "Google Calendar"
+msgstr ""
+
+#: src/Output/Renderer.php:32
+msgid "Outlook.com"
+msgstr ""
+
+#: src/Output/Renderer.php:33
+msgid "Microsoft 365"
+msgstr ""
+
+#: src/Output/Renderer.php:34
+msgid "Yahoo Calendar"
+msgstr ""
+
+#: src/Output/Renderer.php:35
+msgid "Apple / Outlook (.ics)"
+msgstr ""
+
+#: src/Output/Renderer.php:48
+#: templates/buttons.php:11
+msgid "Add this event to your calendar"
+msgstr ""
+
+#: templates/buttons.php:10
+msgid "Add to calendar"
+msgstr ""
+
+#: templates/buttons.php:26
+msgid "(opens in a new tab)"
+msgstr ""

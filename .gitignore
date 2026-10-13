@@ -1,0 +1,13 @@
+/vendor/
+/dist/
+/.phpunit.result.cache
+/.phpstan-cache/
+.DS_Store
+
+# Private work notes and instruction files stay outside plugin history.
+/AGENTS*
+/QA.md
+/DECISIONS.md
+/release-evidence.json
+/planning/
+__pycache__/

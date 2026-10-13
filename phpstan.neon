@@ -1,0 +1,14 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+parameters:
+    level: 6
+    phpVersion: 70400
+    paths:
+        - src
+        - savethedate-for-gravity-forms.php
+        - uninstall.php
+    scanFiles:
+        - tests/stubs/gravityforms.php
+    bootstrapFiles:
+        - tests/constants.php
+    tmpDir: .phpstan-cache

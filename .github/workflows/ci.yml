@@ -1,0 +1,42 @@
+name: Validate Free
+on:
+  workflow_call:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.1', '8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          extensions: dom, mbstring, xml, xmlwriter
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer check
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+      - run: python3 bin/build.py --draft
+      - uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: dist/savethedate-for-gravity-forms
+          strict: true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: free-candidate
+          path: dist/*.zip

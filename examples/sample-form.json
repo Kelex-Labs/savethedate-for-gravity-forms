@@ -1,0 +1,69 @@
+{
+  "version": "2.7",
+  "0": {
+    "title": "SaveTheDate sample workshop",
+    "description": "Update the sample event dates before publishing.",
+    "labelPlacement": "top_label",
+    "descriptionPlacement": "below",
+    "button": {
+      "type": "text",
+      "text": "Register"
+    },
+    "fields": [
+      {
+        "type": "text",
+        "id": 1,
+        "label": "Name",
+        "isRequired": true,
+        "formId": 0,
+        "pageNumber": 1,
+        "visibility": "visible"
+      },
+      {
+        "type": "email",
+        "id": 2,
+        "label": "Email",
+        "isRequired": true,
+        "formId": 0,
+        "pageNumber": 1,
+        "visibility": "visible"
+      }
+    ],
+    "confirmations": {
+      "stdgf_sample": {
+        "id": "stdgf_sample",
+        "name": "Default Confirmation",
+        "isDefault": true,
+        "type": "message",
+        "message": "Thank you for registering! {save_the_date}",
+        "disableAutoformat": false
+      }
+    },
+    "notifications": {
+      "stdgf_email": {
+        "id": "stdgf_email",
+        "name": "Registrant",
+        "event": "form_submission",
+        "toType": "field",
+        "to": "2",
+        "subject": "Workshop registration",
+        "message": "Thank you for registering! {save_the_date}",
+        "isActive": true
+      }
+    },
+    "savethedate": {
+      "enabled": "1",
+      "title": "SaveTheDate sample workshop",
+      "start_date": "2027-07-01",
+      "start_time": "10:00",
+      "end_date": "2027-07-01",
+      "end_time": "11:30",
+      "timezone": "Europe/Malta",
+      "all_day": "0",
+      "location": "Community hall",
+      "description": "A public sample event. Update the dates before publishing.",
+      "url": "",
+      "auto_append": "1"
+    }
+  }
+}
