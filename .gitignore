@@ -1,13 +1,45 @@
-/vendor/
-/dist/
-/.phpunit.result.cache
-/.phpstan-cache/
+# Local tools and editor settings
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
 .DS_Store
 
-# Private work notes and instruction files stay outside plugin history.
-/AGENTS*
-/QA.md
-/DECISIONS.md
-/release-evidence.json
-/planning/
+# Dependencies, generated packages and checks
+/vendor/
+/dist/
+/node_modules/
+/coverage/
+/.phpunit.result.cache
+/.phpunit.cache/
+/.phpstan-cache/
+/.phpcs-cache
+/qa-artifacts/
 __pycache__/
+*.py[cod]
+*.log
+*.zip
+*.tar
+*.tar.gz
+
+# Local configuration and secrets
+.env
+.env.*
+/auth.json
+/composer.phar
+
+# Documentation, work notes and assistant configuration
+*.md
+/docs/
+/planning/
+/private-notes/
+/release-evidence.json
+AGENTS*
+CLAUDE*
+/.agents/
+/.codex/
+/.claude/
+/.cursor/
+/.github/copilot-instructions.md
