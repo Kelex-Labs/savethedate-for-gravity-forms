@@ -17,6 +17,11 @@ a = p.parse_args()
 slug = 'savethedate-for-gravity-forms'
 wc = a.working_copy.resolve()
 if not (wc / '.svn').is_dir(): p.error('Use an existing approved WordPress.org SVN working copy.')
+info_url = subprocess.check_output(['svn', 'info', '--show-item', 'url', str(wc)], text=True).strip()
+if info_url != 'https://plugins.svn.wordpress.org/' + slug:
+    p.error('Working copy must belong to this exact WordPress.org plugin.')
+if subprocess.check_output(['svn', 'status', str(wc)], text=True).strip():
+    p.error('Preserve or commit existing SVN working-copy changes before staging a release.')
 match = re.fullmatch(re.escape(slug) + r'-(\d+\.\d+\.\d+)\.zip', a.stable_zip.name)
 if not match: p.error('Only stable numeric release ZIPs can be staged; candidates are refused.')
 version = match[1]
