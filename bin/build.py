@@ -6,9 +6,12 @@ ROOT = Path(__file__).resolve().parents[1]
 SLUG = 'savethedate-for-gravity-forms'
 p = argparse.ArgumentParser()
 p.add_argument('--draft', action='store_true')
+p.add_argument('--submission', action='store_true', help='Build a submission ZIP with explicitly accepted verification limits recorded in private evidence.')
 p.add_argument('--tag')
 p.add_argument('--qa', type=Path)
 a = p.parse_args()
+if a.draft and a.submission:
+    p.error('Choose either a draft or a submission build.')
 main = (ROOT / (SLUG + '.php')).read_text()
 readme = (ROOT / 'readme.txt').read_text()
 version = re.search(r'^ \* Version: (\d+\.\d+\.\d+)$', main, re.M).group(1)
@@ -33,8 +36,14 @@ if not a.draft:
         p.error('Stable packaging requires recorded release evidence via --qa.')
     evidence = json.loads(a.qa.read_text())
     required = ['live_qa', 'minimum_versions', 'current_versions', 'provider_imports', 'accessibility_rtl', 'multisite_uninstall', 'empty_debug_log', 'readme_validator', 'screenshots', 'plugin_check', 'name_availability']
-    if evidence.get('version') != version or not all(evidence.get(k) == 'pass' for k in required):
+    accepted = evidence.get('accepted_limits', {}) if a.submission else {}
+    optional = {'minimum_versions', 'provider_imports', 'multisite_uninstall'}
+    def verified(key):
+        return evidence.get(key) == 'pass' or (key in optional and evidence.get(key) == 'limited' and isinstance(accepted.get(key), str) and bool(accepted[key].strip()))
+    if evidence.get('version') != version or not all(verified(k) for k in required):
         p.error('Release evidence is incomplete or for a different version.')
+    if accepted and not evidence.get('limits_accepted_by'):
+        p.error('Submission verification limits require recorded publisher acceptance.')
     if not evidence.get('tested_by') or not evidence.get('tested_at'):
         p.error('Release evidence must identify the tester and test date.')
     subprocess.run(['composer', 'check'], cwd=ROOT, check=True)
@@ -70,6 +79,6 @@ with tempfile.TemporaryDirectory(prefix='stdgf-build-') as tmp:
     unpacked = dist / SLUG
     if unpacked.exists(): shutil.rmtree(unpacked)
     shutil.copytree(stage, unpacked)
-result = {'version': version, 'mode': 'candidate' if a.draft else 'stable', 'package': archive.name, 'sha256': hashlib.sha256(archive.read_bytes()).hexdigest(), 'files': {str(file.relative_to(unpacked)): hashlib.sha256(file.read_bytes()).hexdigest() for file in sorted(unpacked.rglob('*')) if file.is_file()}}
+result = {'version': version, 'mode': 'candidate' if a.draft else ('submission' if a.submission else 'stable'), 'package': archive.name, 'sha256': hashlib.sha256(archive.read_bytes()).hexdigest(), 'files': {str(file.relative_to(unpacked)): hashlib.sha256(file.read_bytes()).hexdigest() for file in sorted(unpacked.rglob('*')) if file.is_file()}}
 (dist / 'build-manifest.json').write_text(json.dumps(result, indent=2) + '\n')
 print(json.dumps(result, indent=2))
