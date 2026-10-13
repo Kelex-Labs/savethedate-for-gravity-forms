@@ -77,6 +77,7 @@ No, by default. Opt in under Forms > Settings > SaveTheDate. Cleanup preserves f
 1. Calendar buttons in a real event registration confirmation.
 2. Native Gravity Forms event settings, with local dates and timezone.
 3. Global Solid/Outline style, accent color and opt-in cleanup settings.
+4. Standalone shortcode buttons using Outline style.
 
 == Changelog ==
 
