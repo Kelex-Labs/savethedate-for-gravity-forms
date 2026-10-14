@@ -140,4 +140,16 @@ final class IntegrationTest extends TestCase {
 		self::assertStringContainsString( 'BEGIN:VALARM', ( new IcsRoute() )->response( $this->request() )->get_data() );
 		self::assertNull( ( new EventService() )->event( $this->form( array( 'enabled' => '0' ) ) ) );
 	}
+
+	public function testProviderUrlsAndExplicitOptionsUseTheCommonPath(): void {
+		$seen = array();
+		add_filter( 'stdgf_provider_selection', function ( $ids, $event, $form, $entry, $context, $options ) use ( &$seen ) { $seen[] = $options; return array( 'google' ); }, 10, 6 );
+		$renderer = new Renderer(); $form = $this->form();
+		$providers = $renderer->providers( $form, 'email', null, 'public', array( 'heading' => 'Local' ) );
+		self::assertSame( array( 'google' ), array_keys( $providers ) );
+		self::assertStringContainsString( esc_url( $providers['google']['url'] ), $renderer->render( $form, 'email' ) );
+		self::assertSame( array( 'heading' => 'Local' ), $seen[0] ); self::assertSame( array(), $seen[1] );
+		add_filter( 'stdgf_link_url', function () { return array( 'invalid' ); } );
+		self::assertSame( '', $renderer->render( $form, 'email' ) );
+	}
 }

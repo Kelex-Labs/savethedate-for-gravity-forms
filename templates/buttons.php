@@ -7,8 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<div class="stdgf-buttons stdgf-buttons--<?php echo esc_attr( $style ); ?> stdgf-buttons--horizontal" role="group" aria-label="<?php esc_attr_e( 'Add to calendar', 'savethedate-for-gravity-forms' ); ?>" style="--stdgf-accent:<?php echo esc_attr( $accent ); ?>;--stdgf-text:<?php echo esc_attr( $text ); ?>">
-	<p class="stdgf-buttons__heading"><?php esc_html_e( 'Add this event to your calendar', 'savethedate-for-gravity-forms' ); ?></p>
+<div class="stdgf-buttons stdgf-buttons--<?php echo esc_attr( $style ); ?> stdgf-buttons--<?php echo esc_attr( $layout ); ?>" role="group" aria-label="<?php esc_attr_e( 'Add to calendar', 'savethedate-for-gravity-forms' ); ?>" style="--stdgf-accent:<?php echo esc_attr( $accent ); ?>;--stdgf-text:<?php echo esc_attr( $text ); ?>">
+	<p class="stdgf-buttons__heading"><?php echo esc_html( $heading ); ?></p>
 	<?php foreach ( $urls as $stdgf_provider => $stdgf_url ) : ?>
 		<a class="stdgf-buttons__item stdgf-buttons__item--<?php echo esc_attr( $stdgf_provider ); ?>" href="<?php echo esc_url( $stdgf_url ); ?>"
 		<?php

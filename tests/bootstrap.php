@@ -82,3 +82,5 @@ class WP_REST_Server { public $headers = array(); public function send_header( $
 class WP_Error { public $code; public $data; public function __construct( $code, $message, $data ) { $this->code = $code; $this->data = $data; } }
 
 function wp_strip_all_tags( $text ) { return strip_tags( $text ); }
+
+function sanitize_html_class($value){return preg_replace('/[^a-zA-Z0-9_-]/','',$value);}
