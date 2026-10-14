@@ -28,7 +28,7 @@ function wp_timezone_string() { return 'Europe/Malta'; }
 function wp_enqueue_style( $handle, $url, $deps, $version ) { $GLOBALS['stdgf_styles'][$handle] = $url; }
 function plugins_url( $path, $file ) { return 'https://events.test/wp-content/plugins/savethedate-for-gravity-forms/' . $path; }
 function locate_template( $path ) { return ''; }
-function wp_kses( $html, $allowed ) { return $html; }
+function wp_kses( $html, $allowed ) { return strip_tags( $html, '<' . implode( '><', array_keys( $allowed ) ) . '>' ); }
 function absint( $value ) { return abs( (int) $value ); }
 function shortcode_atts( $defaults, $attributes, $tag ) { return array_intersect_key( (array) $attributes, $defaults ) + $defaults; }
 function add_shortcode( $tag, $callback ) {}
@@ -80,3 +80,5 @@ class WP_REST_Response {
 }
 class WP_REST_Server { public $headers = array(); public function send_header( $name, $value ) { $this->headers[$name] = $value; } }
 class WP_Error { public $code; public $data; public function __construct( $code, $message, $data ) { $this->code = $code; $this->data = $data; } }
+
+function wp_strip_all_tags( $text ) { return strip_tags( $text ); }

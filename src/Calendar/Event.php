@@ -7,8 +7,6 @@
 
 namespace SaveTheDate\Calendar;
 
-defined( 'ABSPATH' ) || exit;
-
 /** Validated calendar data, independent of WordPress APIs. */
 final class Event {
 	/**
@@ -69,21 +67,68 @@ final class Event {
 	public $uid;
 
 	/**
+	 * Optional organizer name and email.
+	 *
+	 * @var array<string, string>
+	 */
+	public $organizer = array();
+	/**
+	 * DISPLAY alarms, minutes before the start.
+	 *
+	 * @var array<int, int>
+	 */
+	public $reminders = array();
+
+	/**
+	 * Return a copy with validated neutral calendar metadata.
+	 *
+	 * @param array<string, mixed> $metadata Metadata; omitted keys retain existing values.
+	 * @return self
+	 * @throws \InvalidArgumentException When metadata is invalid.
+	 */
+	public function with_metadata( array $metadata ): self {
+		$copy = clone $this;
+		if ( array_key_exists( 'organizer', $metadata ) ) {
+			$organizer = $metadata['organizer'];
+			if ( ! is_array( $organizer ) || ( ! empty( $organizer ) && ( ! isset( $organizer['email'] ) || ! is_string( $organizer['email'] ) || ! filter_var( $organizer['email'], FILTER_VALIDATE_EMAIL ) || preg_match( '/[\x00-\x20\x7f]/', $organizer['email'] ) || ( isset( $organizer['name'] ) && ! is_string( $organizer['name'] ) ) ) ) ) {
+				throw new \InvalidArgumentException( 'invalid_organizer' );
+			}
+			$copy->organizer = empty( $organizer ) ? array() : array(
+				'email' => $organizer['email'],
+				'name'  => $organizer['name'] ?? '',
+			);
+		}
+		if ( array_key_exists( 'reminders', $metadata ) ) {
+			if ( ! is_array( $metadata['reminders'] ) || count( $metadata['reminders'] ) > 10 ) {
+				throw new \InvalidArgumentException( 'invalid_reminders' );
+			}
+			foreach ( $metadata['reminders'] as $minutes ) {
+				if ( ! is_int( $minutes ) || $minutes < 0 || $minutes > 40320 ) {
+					throw new \InvalidArgumentException( 'invalid_reminder' );
+				}
+			}
+			$copy->reminders = array_values( array_unique( $metadata['reminders'] ) );
+		}
+		return $copy;
+	}
+
+	/**
 	 * Construct a validated event.
 	 *
 	 * @since 1.0.0
-	 * @param string             $title Title.
-	 * @param \DateTimeImmutable $start Start.
-	 * @param \DateTimeImmutable $end End.
-	 * @param bool               $all_day All day.
-	 * @param string             $location Location.
-	 * @param string             $description Description.
-	 * @param string             $url Url.
-	 * @param string             $uid Uid.
+	 * @param string               $title Title.
+	 * @param \DateTimeImmutable   $start Start.
+	 * @param \DateTimeImmutable   $end End.
+	 * @param bool                 $all_day All day.
+	 * @param string               $location Location.
+	 * @param string               $description Description.
+	 * @param string               $url Url.
+	 * @param string               $uid Uid.
+	 * @param array<string, mixed> $metadata Optional calendar metadata.
 	 * @return void
 	 * @throws \InvalidArgumentException When event input is invalid.
 	 */
-	public function __construct( string $title, \DateTimeImmutable $start, \DateTimeImmutable $end, bool $all_day, string $location, string $description, string $url, string $uid ) {
+	public function __construct( string $title, \DateTimeImmutable $start, \DateTimeImmutable $end, bool $all_day, string $location, string $description, string $url, string $uid, array $metadata = array() ) {
 		if ( $end <= $start || '' === trim( $title ) ) {
 			throw new \InvalidArgumentException( 'invalid_event' );
 		}
@@ -95,6 +140,9 @@ final class Event {
 		$this->description = $description;
 		$this->url         = $url;
 		$this->uid         = $uid;
+		$validated         = $this->with_metadata( $metadata );
+		$this->organizer   = $validated->organizer;
+		$this->reminders   = $validated->reminders;
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * Plugin Name: SaveTheDate for Gravity Forms
  * Plugin URI: https://github.com/Kelex-Labs/savethedate-for-gravity-forms
  * Description: Add calendar buttons to fixed event confirmations and emails in Gravity Forms.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Kelex Labs
  * Author URI: https://github.com/Kelex-Labs
  * Requires at least: 6.2
@@ -25,7 +25,7 @@ function stdgf_bootstrap(): void {
 	if ( defined( 'STDGF_PRO_VERSION' ) ) {
 		return;
 	}
-	define( 'STDGF_VERSION', '1.0.0' );
+	define( 'STDGF_VERSION', '1.0.1' );
 	define( 'STDGF_FILE', __FILE__ );
 	if ( version_compare( PHP_VERSION, '7.4', '<' ) || version_compare( get_bloginfo( 'version' ), '6.2', '<' ) ) {
 		add_action( 'admin_notices', 'stdgf_dependency_notice' );

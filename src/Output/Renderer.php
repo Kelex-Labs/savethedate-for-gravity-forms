@@ -17,23 +17,48 @@ final class Renderer {
 	 * Process plugin data.
 	 *
 	 * @since 1.0.0
-	 * @param array<string, mixed> $form Form.
-	 * @param string               $context Context.
+	 * @param array<string, mixed>      $form Form.
+	 * @param string                    $context Presentation context.
+	 * @param array<string, mixed>|null $entry Entry.
+	 * @param string                    $resolution_context Resolution context; public by default.
 	 * @return string
 	 */
-	public function render( array $form, string $context = 'web' ): string {
-		$event = ( new EventService() )->event( $form );
+	public function render( array $form, string $context = 'web', ?array $entry = null, string $resolution_context = 'public' ): string {
+		$event = ( new EventService() )->event( $form, $entry, $resolution_context );
 		if ( null === $event ) {
 			return '';
 		}
-		$urls   = ( new LinkBuilder() )->build( $event, rest_url( 'savethedate/v1/ics/form/' . (int) $form['id'] ) );
-		$labels = array(
+		$fixed    = 'fixed' === ( $form['savethedate']['event_source'] ?? 'fixed' );
+		$download = apply_filters( 'stdgf_download_url', $fixed ? rest_url( 'savethedate/v1/ics/form/' . (int) $form['id'] ) : '', $event, $form, $entry, $resolution_context );
+		$urls     = ( new LinkBuilder() )->build( $event, is_string( $download ) ? $download : '' );
+		if ( empty( $urls['ics'] ) ) {
+			unset( $urls['ics'] );
+		}
+		$labels      = array(
 			'google'    => __( 'Google Calendar', 'savethedate-for-gravity-forms' ),
 			'outlook'   => __( 'Outlook.com', 'savethedate-for-gravity-forms' ),
 			'office365' => __( 'Microsoft 365', 'savethedate-for-gravity-forms' ),
 			'yahoo'     => __( 'Yahoo Calendar', 'savethedate-for-gravity-forms' ),
 			'ics'       => __( 'Apple / Outlook (.ics)', 'savethedate-for-gravity-forms' ),
 		);
+		$definitions = array();
+		foreach ( $urls as $provider => $url ) {
+			$definitions[ $provider ] = array(
+				'label' => $labels[ $provider ],
+				'url'   => $url,
+			);
+		}
+		$definitions = apply_filters( 'stdgf_provider_definitions', $definitions, $event, $form, $entry, $context );
+		$selection   = apply_filters( 'stdgf_provider_selection', array_keys( is_array( $definitions ) ? $definitions : array() ), $event, $form, $entry, $context );
+		$urls        = array();
+		$labels      = array();
+		foreach ( is_array( $selection ) ? $selection : array() as $provider ) {
+			if ( ! is_string( $provider ) || ! isset( $definitions[ $provider ]['label'], $definitions[ $provider ]['url'] ) || ! is_string( $definitions[ $provider ]['label'] ) || ! is_string( $definitions[ $provider ]['url'] ) ) {
+				continue;
+			}
+			$urls[ $provider ]   = $definitions[ $provider ]['url'];
+			$labels[ $provider ] = $definitions[ $provider ]['label'];
+		}
 		foreach ( $urls as $provider => $url ) {
 			$urls[ $provider ] = apply_filters( 'stdgf_link_url', $url, $provider, $event );
 		}
@@ -42,14 +67,14 @@ final class Renderer {
 			foreach ( $urls as $provider => $url ) {
 				$lines[] = $labels[ $provider ] . ': ' . esc_url_raw( $url );
 			}
-			return implode( "\n", $lines );
+			return wp_strip_all_tags( apply_filters( 'stdgf_output_text', implode( "\n", $lines ), $event, $form, $entry, $context ) );
 		}
 		if ( 'email' === $context ) {
 			$html = '<table role="presentation"><tr><td><p>' . esc_html__( 'Add this event to your calendar', 'savethedate-for-gravity-forms' ) . '</p>';
 			foreach ( $urls as $provider => $url ) {
 				$html .= '<p><a href="' . esc_url( $url ) . '">' . esc_html( $labels[ $provider ] ) . '</a></p>';
 			}
-			return $html . '</td></tr></table>';
+			return wp_kses( apply_filters( 'stdgf_output_html', $html . '</td></tr></table>', $event, $form, $entry, $context ), $this->allowed_html() );
 		}
 		$settings = \SaveTheDate\AddOn::get_instance()->get_plugin_settings();
 		$style    = isset( $settings['style'] ) && 'outline' === $settings['style'] ? 'outline' : 'solid';
@@ -70,13 +95,13 @@ final class Renderer {
 		$this->enqueue();
 		$template = locate_template( 'savethedate/buttons.php' );
 		$template = $template ? $template : dirname( STDGF_FILE ) . '/templates/buttons.php';
-		$template = apply_filters( 'stdgf_template_path', $template, $form );
+		$template = apply_filters( 'stdgf_template_path', $template, $form, $entry, $context );
 		ob_start();
 		do_action( 'stdgf_before_buttons', $event, $form );
 		include $template;
 		do_action( 'stdgf_after_buttons', $event, $form );
 		$html = (string) ob_get_clean();
-		return wp_kses( apply_filters( 'stdgf_buttons_html', $html, $event, $form, $context ), $this->allowed_html() );
+		return wp_kses( apply_filters( 'stdgf_output_html', apply_filters( 'stdgf_buttons_html', $html, $event, $form, $context ), $event, $form, $entry, $context ), $this->allowed_html() );
 	}
 
 	/**
@@ -97,15 +122,18 @@ final class Renderer {
 	 */
 	private function allowed_html(): array {
 		return array(
-			'div'  => array(
+			'table' => array( 'role' => true ),
+			'tr'    => array(),
+			'td'    => array(),
+			'div'   => array(
 				'class'      => true,
 				'role'       => true,
 				'aria-label' => true,
 				'style'      => true,
 			),
-			'p'    => array( 'class' => true ),
-			'span' => array( 'class' => true ),
-			'a'    => array(
+			'p'     => array( 'class' => true ),
+			'span'  => array( 'class' => true ),
+			'a'     => array(
 				'class'    => true,
 				'href'     => true,
 				'target'   => true,

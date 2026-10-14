@@ -14,6 +14,7 @@ class GFAddOn {
 	public static $global_settings = array();
 	public static $posted_settings = array();
 	public static $registered = array();
+	public function __construct() {}
 	public function init() {}
 	public static function register( $class ) { self::$registered[] = $class; }
 	public function get_plugin_settings() { return self::$global_settings; }

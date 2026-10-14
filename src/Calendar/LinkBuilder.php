@@ -7,8 +7,6 @@
 
 namespace SaveTheDate\Calendar;
 
-defined( 'ABSPATH' ) || exit;
-
 /** Pure provider URL builder. */
 final class LinkBuilder {
 	/**

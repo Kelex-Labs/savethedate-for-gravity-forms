@@ -70,4 +70,19 @@ final class CalendarTest extends TestCase {
 		self::assertSame( 'UTC', $factory->timezone( 'invalid', 'also invalid' )->getName() );
 		self::assertNotSame( $a->uid, $factory->create( $this->settings(), 13, 'Form', 'UTC', 'site' )->uid );
 	}
+
+	public function testNeutralMetadataEscapesOrganizerAndSerializesAlarms(): void {
+		$event = new \SaveTheDate\Calendar\Event( 'Meeting', new DateTimeImmutable( '2027-07-01T10:00:00Z' ), new DateTimeImmutable( '2027-07-01T11:00:00Z' ), false, '', '', '', 'test' );
+		$copy = $event->with_metadata( array( 'organizer' => array( 'email' => 'host@example.test', 'name' => "Host\";X=bad\r\nInjected" ), 'reminders' => array( 0, 15, 15 ) ) );
+		self::assertSame( array(), $event->organizer );
+		$content = ( new \SaveTheDate\Calendar\IcsBuilder() )->build( $copy, new DateTimeImmutable( '2027-01-01' ) );
+		self::assertStringContainsString( "ORGANIZER;CN=\"Host^';X=badInjected\":mailto:host@example.test", $content );
+		self::assertSame( 2, substr_count( $content, 'BEGIN:VALARM' ) );
+		self::assertStringContainsString( 'TRIGGER:-PT0M', $content );
+		self::assertStringContainsString( 'TRIGGER:-PT15M', $content );
+		foreach ( array( array( 'reminders' => array( '15' ) ), array( 'reminders' => array( -1 ) ), array( 'organizer' => array( 'email' => "x@example.test\r\nBAD" ) ) ) as $metadata ) {
+			try { $event->with_metadata( $metadata ); self::fail( 'Invalid metadata accepted' ); }
+			catch ( InvalidArgumentException $exception ) { self::assertNotSame( '', $exception->getMessage() ); }
+		}
+	}
 }

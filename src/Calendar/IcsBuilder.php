@@ -7,8 +7,6 @@
 
 namespace SaveTheDate\Calendar;
 
-defined( 'ABSPATH' ) || exit;
-
 /** Pure iCalendar serializer. */
 final class IcsBuilder {
 	/**
@@ -24,6 +22,26 @@ final class IcsBuilder {
 		if ( '' !== $event->url ) {
 			// URL is a URI, not a TEXT property; strip controls without TEXT escaping.
 			$lines[] = 'URL:' . preg_replace( '/[\x00-\x20\x7f]/', '', $event->url );
+		}
+		// Revalidate mutable value objects at the serialization boundary.
+		$metadata = $event->with_metadata(
+			array(
+				'organizer' => $event->organizer,
+				'reminders' => $event->reminders,
+			)
+		);
+		if ( ! empty( $metadata->organizer ) ) {
+			$name = preg_replace( '/[\x00-\x1f\x7f]/', '', $metadata->organizer['name'] );
+			// RFC 6868 parameter encoding, inside a quoted CN parameter.
+			$name    = str_replace( array( '^', '"' ), array( '^^', "^'" ), $name );
+			$lines[] = 'ORGANIZER;CN="' . $name . '":mailto:' . $metadata->organizer['email'];
+		}
+		foreach ( $metadata->reminders as $minutes ) {
+			$lines[] = 'BEGIN:VALARM';
+			$lines[] = 'ACTION:DISPLAY';
+			$lines[] = 'TRIGGER:-PT' . $minutes . 'M';
+			$lines[] = 'DESCRIPTION:' . $this->escape( $event->title );
+			$lines[] = 'END:VALARM';
 		}
 		$lines[] = 'END:VEVENT';
 		$lines[] = 'END:VCALENDAR';

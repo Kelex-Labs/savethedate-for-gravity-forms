@@ -62,7 +62,7 @@ final class IcsRoute {
 	public function response( \WP_REST_Request $request ) {
 		$form    = \GFAPI::get_form( (int) $request['form_id'] );
 		$service = new EventService();
-		$event   = is_array( $form ) ? $service->event( $form ) : null;
+		$event   = is_array( $form ) ? $service->event( $form, null, 'rest' ) : null;
 		if ( null === $event ) {
 			return new \WP_Error( 'stdgf_not_found', __( 'Event not found.', 'savethedate-for-gravity-forms' ), array( 'status' => 404 ) );
 		}

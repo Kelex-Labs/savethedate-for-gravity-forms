@@ -24,12 +24,12 @@ class BuildTests(unittest.TestCase):
             return subprocess.run([sys.executable, str(root / 'bin/build.py')] + (arguments or []), capture_output=True, text=True)
 
     def test_version_mismatch_is_rejected(self):
-        result = self.fixture({'readme.txt': (ROOT / 'readme.txt').read_text().replace('Stable tag: 1.0.0', 'Stable tag: 1.0.1')}, ['--draft'])
+        result = self.fixture({'readme.txt': (ROOT / 'readme.txt').read_text().replace('Stable tag: 1.0.1', 'Stable tag: 9.9.9')}, ['--draft'])
         self.assertNotEqual(0, result.returncode)
         self.assertIn('disagree', result.stderr)
 
     def test_wrong_numeric_tag_is_rejected(self):
-        result = self.fixture(arguments=['--draft', '--tag', '1.0.1'])
+        result = self.fixture(arguments=['--draft', '--tag', '9.9.9'])
         self.assertNotEqual(0, result.returncode)
         self.assertIn('tag does not match', result.stderr)
 

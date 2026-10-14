@@ -93,6 +93,30 @@ class AddOn extends \GFAddOn {
 	protected $_capabilities_uninstall = 'gravityforms_uninstall';
 
 	/**
+	 * Apply an edition identity before the Gravity Forms constructor runs.
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$identity = apply_filters(
+			'stdgf_addon_identity',
+			array(
+				'version'     => $this->_version,
+				'path'        => $this->_path,
+				'title'       => $this->_title,
+				'short_title' => $this->_short_title,
+			)
+		);
+		foreach ( array( 'version', 'path', 'title', 'short_title' ) as $key ) {
+			if ( isset( $identity[ $key ] ) && is_string( $identity[ $key ] ) && '' !== $identity[ $key ] ) {
+				$property        = '_' . $key;
+				$this->$property = $identity[ $key ];
+			}
+		}
+		parent::__construct();
+	}
+
+	/**
 	 * Return the Gravity Forms singleton.
 	 *
 	 * @since 1.0.0
@@ -254,7 +278,7 @@ class AddOn extends \GFAddOn {
 	 */
 	public function validate_event( $field, $value ) {
 		$settings = $this->get_posted_settings();
-		if ( empty( $settings['enabled'] ) ) {
+		if ( empty( $settings['enabled'] ) || 'fixed' !== ( $settings['event_source'] ?? 'fixed' ) ) {
 			return;
 		}
 		try {
@@ -273,7 +297,7 @@ class AddOn extends \GFAddOn {
 	 */
 	private function event_notice( array $form ): string {
 		$settings = $form['savethedate'] ?? array();
-		if ( empty( $settings['enabled'] ) ) {
+		if ( empty( $settings['enabled'] ) || 'fixed' !== ( $settings['event_source'] ?? 'fixed' ) ) {
 			return '';
 		}
 		$message = '';
@@ -390,10 +414,10 @@ class AddOn extends \GFAddOn {
 	 * Append once to Text confirmations, including AJAX responses.
 	 *
 	 * @since 1.0.0
-	 * @param string|array<string, mixed> $confirmation Confirmation.
-	 * @param array<string, mixed>        $form Form.
-	 * @param array<string, mixed>        $entry Entry.
-	 * @param bool                        $ajax Ajax.
+	 * @param string|array<string, mixed>     $confirmation Confirmation.
+	 * @param array<string, mixed>            $form Form.
+	 * @param array<string, mixed>|false|null $entry Entry.
+	 * @param bool                            $ajax Ajax.
 	 * @return string|array<string, mixed>
 	 */
 	public function confirmation( $confirmation, $form, $entry, $ajax ) {
@@ -404,20 +428,20 @@ class AddOn extends \GFAddOn {
 		if ( isset( $settings['auto_append'] ) && empty( $settings['auto_append'] ) ) {
 			return $confirmation;
 		}
-		return $confirmation . ( new Renderer() )->render( $form );
+		return $confirmation . ( new Renderer() )->render( $form, 'web', is_array( $entry ) ? $entry : null, 'confirmation' );
 	}
 
 	/**
 	 * Replace the merge tag without processing event content as merge tags.
 	 *
 	 * @since 1.0.0
-	 * @param string               $text Text.
-	 * @param array<string, mixed> $form Form.
-	 * @param array<string, mixed> $entry Entry.
-	 * @param bool                 $url_encode Url encode.
-	 * @param bool                 $esc_html Esc html.
-	 * @param bool                 $nl2br Nl2br.
-	 * @param string               $format Format.
+	 * @param string                          $text Text.
+	 * @param array<string, mixed>            $form Form.
+	 * @param array<string, mixed>|false|null $entry Entry.
+	 * @param bool                            $url_encode Url encode.
+	 * @param bool                            $esc_html Esc html.
+	 * @param bool                            $nl2br Nl2br.
+	 * @param string                          $format Format.
 	 * @return string
 	 */
 	public function merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
@@ -425,7 +449,7 @@ class AddOn extends \GFAddOn {
 			return $text;
 		}
 		$context = 'text' === $format ? 'text' : ( false !== strpos( $text, '{stdgf_save_the_date_email}' ) ? 'email' : 'web' );
-		$html    = ( new Renderer() )->render( $form, $context );
+		$html    = ( new Renderer() )->render( $form, $context, is_array( $entry ) ? $entry : null, 'merge_tag' );
 		return str_replace( array( '{save_the_date}', '{stdgf_save_the_date_email}' ), $url_encode ? rawurlencode( $html ) : $html, $text );
 	}
 
@@ -451,9 +475,9 @@ class AddOn extends \GFAddOn {
 	 * Resolve notification tags early with email-friendly or plain-text markup.
 	 *
 	 * @since 1.0.0
-	 * @param array<string, mixed> $notification Notification.
-	 * @param array<string, mixed> $form Form.
-	 * @param array<string, mixed> $entry Entry.
+	 * @param array<string, mixed>            $notification Notification.
+	 * @param array<string, mixed>            $form Form.
+	 * @param array<string, mixed>|false|null $entry Entry.
 	 * @return array<string, mixed>
 	 */
 	public function notification( $notification, $form, $entry ) {

@@ -7,8 +7,6 @@
 
 namespace SaveTheDate\Calendar;
 
-defined( 'ABSPATH' ) || exit;
-
 /** Converts sanitized settings into calendar data. */
 final class EventFactory {
 	/**

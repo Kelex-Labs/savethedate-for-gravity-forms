@@ -87,4 +87,57 @@ final class IntegrationTest extends TestCase {
 		GFAddOn::$posted_settings = $this->form( array( 'end_time' => '09:00' ) )['savethedate']; AddOn::get_instance()->validate_event( $field, '' ); self::assertNotSame( '', $field->error );
 		$field->error = ''; GFAddOn::$posted_settings = $this->form()['savethedate']; AddOn::get_instance()->validate_event( $field, '' ); self::assertSame( '', $field->error );
 	}
+
+	public function testUnknownSourceFailsClosedAndSurvivesDowngradeSave(): void {
+		$form = $this->form( array( 'event_source' => 'entry', 'mapping' => array( 'start' => '2' ) ) );
+		GFAPI::$forms[12] = $form;
+		self::assertNull( ( new EventService() )->event( $form, array( 'id' => 1 ), 'confirmation' ) );
+		self::assertSame( '', ( new Renderer() )->render( $form ) );
+		self::assertInstanceOf( WP_Error::class, ( new IcsRoute() )->response( $this->request() ) );
+		AddOn::get_instance()->save_form_settings( $form, array( 'title' => 'Changed title' ) );
+		self::assertSame( 'entry', GFAPI::$forms[12]['savethedate']['event_source'] );
+		self::assertSame( array( 'start' => '2' ), GFAPI::$forms[12]['savethedate']['mapping'] );
+		self::assertNull( ( new EventService() )->event( GFAPI::$forms[12] ) );
+	}
+	public function testExplicitContextAndEntryNeverLeakBetweenRenders(): void {
+		$seen = array();
+		add_filter( 'stdgf_event_resolver', function ( $resolver, $source, $form, $entry, $context ) use ( &$seen ) {
+			$seen[] = array( $entry['id'] ?? null, $context );
+			return new class implements \SaveTheDate\Resolution\EventResolver {
+				public function resolve( array $settings, array $form, ?array $entry, string $context ): ?\SaveTheDate\Calendar\Event {
+					$settings['title'] = 'Entry ' . ( $entry['id'] ?? 'public' );
+					return ( new \SaveTheDate\Calendar\EventFactory() )->create( $settings, 12, '', 'UTC', 'https://events.test/' );
+				}
+			};
+		}, 10, 5 );
+		$form = $this->form( array( 'event_source' => 'entry' ) );
+		$addon = AddOn::get_instance();
+		foreach ( array( 1, 2, 1 ) as $id ) {
+			$entry = array( 'id' => $id );
+			self::assertStringContainsString( 'Entry%20' . $id, $addon->merge_tag( '{save_the_date}', $form, $entry, false, false, false, 'html' ) );
+			self::assertStringContainsString( 'Entry%20' . $id, $addon->merge_tag( '{save_the_date}', $form, $entry, false, false, false, 'text' ) );
+			self::assertStringContainsString( 'Entry%20' . $id, $addon->confirmation( '', $form, $entry, true ) );
+		}
+		self::assertSame( '', ( new Renderer() )->render( $form ) );
+		GFAPI::$forms[12] = $form;
+		self::assertInstanceOf( WP_Error::class, ( new IcsRoute() )->response( $this->request() ) );
+		self::assertCount( 9, $seen );
+		self::assertSame( array( 1, 'merge_tag' ), $seen[0] );
+		self::assertSame( array( 2, 'confirmation' ), $seen[5] );
+	}
+	public function testProviderSelectionAndPresentationRemainEscaped(): void {
+		add_filter( 'stdgf_provider_selection', function () { return array( 'ics', 'google', 'missing' ); } );
+		add_filter( 'stdgf_output_html', function ( $html ) { return $html . '<script>bad()</script>'; } );
+		$html = ( new Renderer() )->render( $this->form(), 'email' );
+		self::assertSame( 2, substr_count( $html, '<a ' ) );
+		self::assertLessThan( strpos( $html, 'Google Calendar' ), strpos( $html, 'Apple / Outlook' ) );
+		self::assertStringNotContainsString( '<script>', $html );
+	}
+	public function testMetadataExtensionUsesTheSameEligibilityGate(): void {
+		add_filter( 'stdgf_event_metadata', function () { return array( 'organizer' => array( 'email' => 'host@example.test', 'name' => 'Host' ), 'reminders' => array( 15 ) ); } );
+		$event = ( new EventService() )->event( $this->form() );
+		self::assertSame( array( 15 ), $event->reminders );
+		self::assertStringContainsString( 'BEGIN:VALARM', ( new IcsRoute() )->response( $this->request() )->get_data() );
+		self::assertNull( ( new EventService() )->event( $this->form( array( 'enabled' => '0' ) ) ) );
+	}
 }
