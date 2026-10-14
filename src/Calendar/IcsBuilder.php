@@ -28,13 +28,17 @@ final class IcsBuilder {
 			array(
 				'organizer' => $event->organizer,
 				'reminders' => $event->reminders,
+				'sequence'  => $event->sequence,
 			)
 		);
+		if ( $metadata->sequence > 0 ) {
+			$lines[] = 'SEQUENCE:' . $metadata->sequence;
+		}
 		if ( ! empty( $metadata->organizer ) ) {
 			$name = preg_replace( '/[\x00-\x1f\x7f]/', '', $metadata->organizer['name'] );
 			// RFC 6868 parameter encoding, inside a quoted CN parameter.
 			$name    = str_replace( array( '^', '"' ), array( '^^', "^'" ), $name );
-			$lines[] = 'ORGANIZER;CN="' . $name . '":mailto:' . $metadata->organizer['email'];
+			$lines[] = 'ORGANIZER;CN="' . $name . '":mailto:' . str_replace( '%40', '@', rawurlencode( $metadata->organizer['email'] ) );
 		}
 		foreach ( $metadata->reminders as $minutes ) {
 			$lines[] = 'BEGIN:VALARM';

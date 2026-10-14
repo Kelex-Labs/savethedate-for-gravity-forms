@@ -78,6 +78,12 @@ final class Event {
 	 * @var array<int, int>
 	 */
 	public $reminders = array();
+	/**
+	 * Calendar revision; zero omits the optional SEQUENCE property.
+	 *
+	 * @var int
+	 */
+	public $sequence = 0;
 
 	/**
 	 * Return a copy with validated neutral calendar metadata.
@@ -108,6 +114,12 @@ final class Event {
 				}
 			}
 			$copy->reminders = array_values( array_unique( $metadata['reminders'] ) );
+		}
+		if ( array_key_exists( 'sequence', $metadata ) ) {
+			if ( ! is_int( $metadata['sequence'] ) || $metadata['sequence'] < 0 || $metadata['sequence'] > 2147483647 ) {
+				throw new \InvalidArgumentException( 'invalid_sequence' );
+			}
+			$copy->sequence = $metadata['sequence'];
 		}
 		return $copy;
 	}
@@ -143,6 +155,7 @@ final class Event {
 		$validated         = $this->with_metadata( $metadata );
 		$this->organizer   = $validated->organizer;
 		$this->reminders   = $validated->reminders;
+		$this->sequence    = $validated->sequence;
 	}
 
 	/**

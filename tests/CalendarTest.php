@@ -85,4 +85,14 @@ final class CalendarTest extends TestCase {
 			catch ( InvalidArgumentException $exception ) { self::assertNotSame( '', $exception->getMessage() ); }
 		}
 	}
+
+	public function testCalendarSequenceAndOrganizerUriEncoding(): void {
+		$event = ( new EventFactory() )->create( $this->settings(), 12, 'Form', 'UTC', 'site' );
+		$event = $event->with_metadata( array( 'sequence' => 7, 'organizer' => array( 'email' => 'host?question@example.test' ) ) );
+		$content = ( new IcsBuilder() )->build( $event, new DateTimeImmutable( '2026-01-01' ) );
+		self::assertStringContainsString( 'SEQUENCE:7', $content );
+		self::assertStringContainsString( 'mailto:host%3Fquestion@example.test', $content );
+		$this->expectException( InvalidArgumentException::class );
+		$event->with_metadata( array( 'sequence' => -1 ) );
+	}
 }

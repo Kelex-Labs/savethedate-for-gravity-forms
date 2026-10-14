@@ -24,7 +24,7 @@ class BuildTests(unittest.TestCase):
             return subprocess.run([sys.executable, str(root / 'bin/build.py')] + (arguments or []), capture_output=True, text=True)
 
     def test_version_mismatch_is_rejected(self):
-        result = self.fixture({'readme.txt': (ROOT / 'readme.txt').read_text().replace('Stable tag: 1.0.1', 'Stable tag: 9.9.9')}, ['--draft'])
+        result = self.fixture({'readme.txt': (ROOT / 'readme.txt').read_text().replace(re.search(r'^Stable tag: (.+)$', (ROOT / 'readme.txt').read_text(), re.M).group(0), 'Stable tag: 9.9.9')}, ['--draft'])
         self.assertNotEqual(0, result.returncode)
         self.assertIn('disagree', result.stderr)
 
