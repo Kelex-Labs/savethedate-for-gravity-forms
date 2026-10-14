@@ -35,7 +35,7 @@ class BuildTests(unittest.TestCase):
 
     def test_unverified_publisher_metadata_blocks_stable_build(self):
         readme = re.sub(r'^Contributors:.*$', 'Contributors:', (ROOT / 'readme.txt').read_text(), flags=re.M)
-        result = self.fixture({'readme.txt': readme}, arguments=['--tag', '1.0.0'])
+        result = self.fixture({'readme.txt': readme}, arguments=['--tag', re.search(r'^Stable tag: (.+)$', (ROOT / 'readme.txt').read_text(), re.M).group(1)])
         self.assertNotEqual(0, result.returncode)
         self.assertIn('Contributors and Tested up to', result.stderr)
 
