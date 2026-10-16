@@ -4,7 +4,7 @@ Tags: gravity forms, add to calendar, ics, event registration, google calendar
 Requires at least: 6.2
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,18 +81,20 @@ No, by default. Opt in under Forms > Settings > SaveTheDate. Cleanup preserves f
 
 == Changelog ==
 
+= 1.0.4 =
+* The missing-requirements notice now appears only on the Plugins screen and explains how to fix it.
+
 = 1.0.3 =
-* Share selected provider URLs and explicit presentation extension contracts across outputs.
+* Confirmations, emails and the shortcode now use the same calendar links and button settings.
 
 = 1.0.2 =
-* Extend neutral calendar metadata with optional revision sequence and URI-safe organizer addresses.
+* Improved calendar file compatibility for event updates.
 
 = 1.0.1 =
-* Add neutral event resolution, calendar metadata, provider, presentation and edition identity contracts.
-* Hide unsupported event sources while preserving their settings.
+* Internal improvements to how events and calendar links are prepared.
 
 = 1.0.0 =
-* Initial Free implementation with fixed events, calendar links, confirmations, email merge tags and public .ics downloads.
+* Initial release with fixed events, calendar links, confirmations, email merge tags and public .ics downloads.
 
 == Upgrade Notice ==
 

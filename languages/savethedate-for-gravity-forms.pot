@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SaveTheDate for Gravity Forms 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/free\n"
+"Project-Id-Version: SaveTheDate for Gravity Forms 1.0.4\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/savethedate-for-gravity-forms\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-13T21:24:55+00:00\n"
+"POT-Creation-Date: 2026-10-16T15:22:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: savethedate-for-gravity-forms\n"
@@ -39,123 +39,123 @@ msgstr ""
 msgid "https://github.com/Kelex-Labs"
 msgstr ""
 
-#: savethedate-for-gravity-forms.php:62
-msgid "SaveTheDate requires WordPress 6.2+, PHP 7.4+ and an active licensed copy of Gravity Forms 2.7+."
+#: savethedate-for-gravity-forms.php:63
+msgid "SaveTheDate for Gravity Forms is inactive. It requires WordPress 6.2+, PHP 7.4+ and Gravity Forms 2.7+. Install and activate Gravity Forms 2.7 or newer, or update WordPress or PHP, to start using it."
 msgstr ""
 
-#: src/AddOn.php:149
+#: src/AddOn.php:173
 msgid "Event title"
 msgstr ""
 
-#: src/AddOn.php:155
+#: src/AddOn.php:179
 msgid "All-day event"
 msgstr ""
 
-#: src/AddOn.php:160
+#: src/AddOn.php:184
 msgid "Start date"
 msgstr ""
 
-#: src/AddOn.php:166
+#: src/AddOn.php:190
 msgid "Start time"
 msgstr ""
 
-#: src/AddOn.php:176
+#: src/AddOn.php:200
 msgid "End date (inclusive for all-day events)"
 msgstr ""
 
-#: src/AddOn.php:183
+#: src/AddOn.php:207
 msgid "End time"
 msgstr ""
 
-#: src/AddOn.php:193
+#: src/AddOn.php:217
 msgid "Timezone"
 msgstr ""
 
-#: src/AddOn.php:197
+#: src/AddOn.php:221
 msgid "Choose the event timezone. Sites using a numeric UTC offset default to UTC here. Repeated autumn DST times use PHP timezone rules; choose an unambiguous time when possible."
 msgstr ""
 
-#: src/AddOn.php:201
+#: src/AddOn.php:225
 msgid "Location"
 msgstr ""
 
-#: src/AddOn.php:206
+#: src/AddOn.php:230
 msgid "Description (plain text)"
 msgstr ""
 
-#: src/AddOn.php:211
+#: src/AddOn.php:235
 msgid "Event URL"
 msgstr ""
 
-#: src/AddOn.php:217
+#: src/AddOn.php:241
 msgid "Add buttons to Text confirmations automatically"
 msgstr ""
 
-#: src/AddOn.php:224
+#: src/AddOn.php:248
 msgid "Event"
 msgstr ""
 
-#: src/AddOn.php:225
+#: src/AddOn.php:249
 msgid "Event details and calendar downloads are public. Do not enter private information."
 msgstr ""
 
-#: src/AddOn.php:229
+#: src/AddOn.php:253
 msgid "This form is an event"
 msgstr ""
 
-#: src/AddOn.php:235
+#: src/AddOn.php:259
 msgid "Event details"
 msgstr ""
 
-#: src/AddOn.php:263
+#: src/AddOn.php:287
 msgid "Enter valid dates and times with the end after the start. An all-day end date includes that day. Times skipped by daylight saving changes are invalid."
 msgstr ""
 
-#: src/AddOn.php:284
+#: src/AddOn.php:308
 msgid "This event has ended. Buttons are hidden. If you duplicated this form, update its dates."
 msgstr ""
 
-#: src/AddOn.php:288
+#: src/AddOn.php:312
 msgid "The configured timezone is invalid or empty. The site timezone, then UTC, is used as a fallback."
 msgstr ""
 
-#: src/AddOn.php:291
+#: src/AddOn.php:315
 msgid "The event dates are invalid. Buttons and downloads are hidden until you correct them."
 msgstr ""
 
-#: src/AddOn.php:322
+#: src/AddOn.php:346
 msgid "SaveTheDate settings"
 msgstr ""
 
-#: src/AddOn.php:326
+#: src/AddOn.php:350
 msgid "Button style"
 msgstr ""
 
-#: src/AddOn.php:331
+#: src/AddOn.php:355
 msgid "Solid"
 msgstr ""
 
-#: src/AddOn.php:335
+#: src/AddOn.php:359
 msgid "Outline"
 msgstr ""
 
-#: src/AddOn.php:342
+#: src/AddOn.php:366
 msgid "Accent color"
 msgstr ""
 
-#: src/AddOn.php:349
+#: src/AddOn.php:373
 msgid "Remove SaveTheDate settings on uninstall"
 msgstr ""
 
-#: src/AddOn.php:352
+#: src/AddOn.php:376
 msgid "Off by default. Applies separately to each site in a multisite network. Forms and entries are always preserved."
 msgstr ""
 
-#: src/AddOn.php:370
+#: src/AddOn.php:394
 msgid "Enter a valid hex color, such as #2455a4."
 msgstr ""
 
-#: src/AddOn.php:444
+#: src/AddOn.php:468
 msgid "SaveTheDate calendar buttons"
 msgstr ""
 
@@ -164,29 +164,30 @@ msgstr ""
 msgid "Event not found."
 msgstr ""
 
-#: src/Output/Renderer.php:31
+#: src/Output/Renderer.php:51
+#: src/Output/Renderer.php:64
+#: src/Output/Renderer.php:73
+msgid "Add this event to your calendar"
+msgstr ""
+
+#: src/Output/Renderer.php:134
 msgid "Google Calendar"
 msgstr ""
 
-#: src/Output/Renderer.php:32
+#: src/Output/Renderer.php:135
 msgid "Outlook.com"
 msgstr ""
 
-#: src/Output/Renderer.php:33
+#: src/Output/Renderer.php:136
 msgid "Microsoft 365"
 msgstr ""
 
-#: src/Output/Renderer.php:34
+#: src/Output/Renderer.php:137
 msgid "Yahoo Calendar"
 msgstr ""
 
-#: src/Output/Renderer.php:35
+#: src/Output/Renderer.php:138
 msgid "Apple / Outlook (.ics)"
-msgstr ""
-
-#: src/Output/Renderer.php:48
-#: templates/buttons.php:11
-msgid "Add this event to your calendar"
 msgstr ""
 
 #: templates/buttons.php:10

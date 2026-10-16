@@ -3,7 +3,7 @@
  * Plugin Name: SaveTheDate for Gravity Forms
  * Plugin URI: https://github.com/Kelex-Labs/savethedate-for-gravity-forms
  * Description: Add calendar buttons to fixed event confirmations and emails in Gravity Forms.
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Kelex Labs
  * Author URI: https://github.com/Kelex-Labs
  * Requires at least: 6.2
@@ -25,7 +25,7 @@ function stdgf_bootstrap(): void {
 	if ( defined( 'STDGF_PRO_VERSION' ) ) {
 		return;
 	}
-	define( 'STDGF_VERSION', '1.0.3' );
+	define( 'STDGF_VERSION', '1.0.4' );
 	define( 'STDGF_FILE', __FILE__ );
 	if ( version_compare( PHP_VERSION, '7.4', '<' ) || version_compare( get_bloginfo( 'version' ), '6.2', '<' ) ) {
 		add_action( 'admin_notices', 'stdgf_dependency_notice' );
@@ -56,9 +56,10 @@ function stdgf_check_dependency(): void {
 	}
 }
 
-/** Display a dependency notice to site administrators. */
+/** Display a dependency notice to site administrators on the Plugins screen only. */
 function stdgf_dependency_notice(): void {
-	if ( current_user_can( 'activate_plugins' ) ) {
-		echo '<div class="notice notice-warning is-dismissible"><p>' . esc_html__( 'SaveTheDate requires WordPress 6.2+, PHP 7.4+ and an active licensed copy of Gravity Forms 2.7+.', 'savethedate-for-gravity-forms' ) . '</p></div>';
+	global $pagenow;
+	if ( 'plugins.php' === $pagenow && current_user_can( 'activate_plugins' ) ) {
+		echo '<div class="notice notice-warning is-dismissible"><p>' . esc_html__( 'SaveTheDate for Gravity Forms is inactive. It requires WordPress 6.2+, PHP 7.4+ and Gravity Forms 2.7+. Install and activate Gravity Forms 2.7 or newer, or update WordPress or PHP, to start using it.', 'savethedate-for-gravity-forms' ) . '</p></div>';
 	}
 }
