@@ -40,6 +40,8 @@ Attendees review and save the event themselves. No calendar account connection i
 
 **More flexibility for registrations with individual dates and richer calendar delivery.** SaveTheDate Pro, our premium edition, is built for workflows that go beyond a shared event.
 
+![SaveTheDate Pro: events from form entries, protected .ics downloads, calendar email attachments, and more styles and layouts.](https://ps.w.org/savethedate-for-gravity-forms/assets/description-pro.png)
+
 Pro features include:
 
 * **Events from submitted form fields** — map Date and Time fields for entry-specific events, with optional event-detail fields.
