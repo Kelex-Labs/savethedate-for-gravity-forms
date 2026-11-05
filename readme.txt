@@ -12,72 +12,95 @@ Add Google, Outlook, Microsoft 365, Yahoo and .ics calendar links to Gravity For
 
 == Description ==
 
-SaveTheDate adds calendar links for one fixed event per Gravity Forms form.
-An active, licensed copy of Gravity Forms 2.7 or newer is required. Gravity Forms is a separate commercial plugin.
+= From registration to “see you there.” =
 
-* Local event dates and times, timezone, all-day events, location, plain-text description and event URL.
-* Google Calendar, Outlook.com, Microsoft 365, Yahoo Calendar and .ics downloads for Apple Calendar and Outlook desktop.
-* Automatic calendar buttons in Text confirmations, with AJAX and regular submissions.
-* The {save_the_date} merge tag in confirmations and notifications, including plain-text email.
-* The [savethedate form="12"] shortcode for public event pages.
-* Solid and Outline buttons, accent color and a horizontal layout that wraps on small screens.
-* Theme template overrides, translation support, RTL layout and keyboard focus styles.
+Help attendees save your next webinar, workshop, class, or meetup to the calendar they already use.
 
-= Public events and external services =
+**SaveTheDate for Gravity Forms** adds calendar buttons to Text confirmations, links to notification emails, and a shortcode for public event pages. Set up one fixed event per form and let visitors choose **Google Calendar, Outlook.com, Microsoft 365, Yahoo Calendar, or an .ics download** for Apple Calendar and Outlook desktop.
 
-All enabled event details and .ics downloads are public, without requiring a submission or login. Do not configure private details.
-This plugin sends no external requests or entry data. Clicking a calendar-provider link opens that provider and transfers the configured event title, dates, location, description and URL in the link. Provider use is subject to that provider's terms and privacy policy:
+Attendees review and save the event themselves. No calendar account connection is required.
 
-* Google: https://policies.google.com/terms and https://policies.google.com/privacy
-* Microsoft: https://www.microsoft.com/servicesagreement and https://privacy.microsoft.com/privacystatement
-* Yahoo: https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html and https://legal.yahoo.com/us/en/yahoo/privacy/index.html
+**By Kelex Labs** · [Visit kelex-labs.com](https://kelex-labs.com/)
 
-.ics downloads are served by your WordPress site at /wp-json/savethedate/v1/ics/form/{form_id}.
-Missing, inactive, trashed, disabled, invalid and ended events return 404. No submission data is included.
+![Register with Gravity Forms, see calendar links, and choose a calendar.](https://ps.w.org/savethedate-for-gravity-forms/assets/description-workflow.png)
 
-= Timezones and caching =
+= Free: a simple next step for shared events =
 
-Enter local times in the selected event timezone. Timed calendar output uses UTC and applies daylight saving rules. All-day end dates include the last day in the editor; calendar output uses the following exclusive date. Nonexistent DST times are rejected. Repeated autumn DST times use PHP timezone rules.
+* **One fixed event per form** — title, dates, timezone, location, description, and event URL.
+* **Timed or all-day events** — timed output follows the selected timezone and daylight saving rules.
+* **Confirmation buttons** — automatic output in Text confirmations, with regular and AJAX submissions.
+* **Email links** — insert `{save_the_date}` in notification messages; HTML and plain-text emails are supported.
+* **Public event pages** — use `[savethedate form="12"]` with your form ID, including on redirect-confirmation pages.
+* **Your look** — Solid or Outline buttons, an accent color, a wrapping layout, and theme template overrides.
+* **Accessible presentation** — keyboard focus styles, translation support, and RTL layout.
 
-Downloads advertise caching for at most five minutes, shortened to the remaining event lifetime. Exclude /wp-json/savethedate/* from longer CDN and page caches. Cached pages can show old buttons until their page cache expires.
+![Five calendar options for confirmations, notification emails, and public event pages.](https://ps.w.org/savethedate-for-gravity-forms/assets/description-features.png)
+
+= SaveTheDate Pro =
+
+**More flexibility for registrations with individual dates and richer calendar delivery.** SaveTheDate Pro, our premium edition, is built for workflows that go beyond a shared event.
+
+Pro features include:
+
+* **Events from submitted form fields** — map Date and Time fields for entry-specific events, with optional event-detail fields.
+* **Protected entry .ics downloads** — expiring, revocable links for entry-specific calendars. Anyone with a forwarded link can access it until it expires or is revoked.
+* **Calendar attachments in email** — add .ics files to selected Gravity Forms notification emails.
+* **More styles and layouts** — Pill and Minimal styles, plus vertical and dropdown layouts alongside Solid, Outline, and horizontal output.
+* **Calendar provider controls** — choose which providers to display and their order.
+* **Organizer details and calendar alarms** — include organizer information and DISPLAY alarms in .ics files; support varies by calendar app. These are not reminder emails.
+* **More ways to place your links** — a calendar block for public fixed events, individual provider URL merge tags, and plain-text link output.
+* **Kelex Sunstone included** — one dashboard to install, update, roll back and license all your Kelex Labs plugins.
+
+These features are not included in this free plugin. [Compare Free and Pro, and upgrade, on kelex-labs.com](https://kelex-labs.com/plugins/savethedate/). No purchase or subscription is required to use the free features above.
+
+= Requirements =
+
+Requires an active, licensed copy of **Gravity Forms 2.7+**, sold separately, plus WordPress 6.2+ and PHP 7.4+. SaveTheDate is an independent Kelex Labs add-on, not affiliated with Gravity Forms or the calendar providers.
+
+= Public events and privacy =
+
+**Free event details and .ics downloads are public**, without requiring a submission or login. Do not configure private information.
+
+The plugin makes no automatic external requests and sends no form entry data to providers. Clicking a provider link shares the configured event title, dates, location, description, and URL with that provider. .ics files are served by your WordPress site and contain no submission data.
+
+* Google: [Terms](https://policies.google.com/terms) · [Privacy](https://policies.google.com/privacy)
+* Microsoft: [Terms](https://www.microsoft.com/servicesagreement) · [Privacy](https://privacy.microsoft.com/privacystatement)
+* Yahoo: [Terms](https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html) · [Privacy](https://legal.yahoo.com/us/en/yahoo/privacy/index.html)
 
 == Installation ==
 
-1. Install and activate your licensed Gravity Forms 2.7+ copy on WordPress 6.2+ with PHP 7.4+.
-2. Upload the plugin ZIP under Plugins > Add New > Upload Plugin and activate it.
-3. Open a form's Settings > SaveTheDate and enable "This form is an event".
-4. Enter future start and end dates, times and timezone, then save. For all-day events, set the inclusive last day.
-5. Submit the form. Buttons appear in its Text confirmation by default. Insert {save_the_date} into a notification message for email links.
+1. Activate your licensed Gravity Forms 2.7+ copy, then install and activate SaveTheDate.
+2. Open your form's Settings > SaveTheDate and enable "This form is an event".
+3. Add future event dates, times, timezone, and other details, then save. For all-day events, select the inclusive last day.
+4. Submit the form and check its Text confirmation. Add `{save_the_date}` to notification messages or `[savethedate form="12"]` to a public page as needed.
 
-Global style and cleanup settings are under Forms > Settings > SaveTheDate.
-A sample form export is included in examples/sample-form.json. Update its event dates after importing it.
+Global button styles, accent color, and cleanup preferences are under Forms > Settings > SaveTheDate.
 
 == Frequently Asked Questions ==
 
-= Does this work without Gravity Forms? =
-No. Gravity Forms is a required commercial dependency and is not bundled.
+= Is Gravity Forms included? =
+No. Gravity Forms is a separate commercial plugin and is required.
 
-= Why are the buttons missing? =
-Check that the form is active and not trashed, event settings are enabled, the range is valid and the event has not ended. Auto-append applies only to Text confirmations. Redirect confirmations can use the shortcode on their destination page.
+= What is the difference between Free and Pro? =
+Free covers one fixed, shared event per form, calendar links, confirmation buttons, and a public shortcode. SaveTheDate Pro adds entry-based events, protected entry downloads, email attachments, and more presentation options. See the [full comparison](https://kelex-labs.com/plugins/savethedate/).
 
-= Can I display the links before registration? =
-Yes. Use [savethedate form="12"] with your form ID. Event details and downloads are public.
+= Why aren't my calendar buttons showing? =
+Check that the form is active, event settings are enabled, dates are valid, and the event has not ended. Automatic output applies to Text confirmations. For a redirect confirmation, use the shortcode on the destination page.
 
-= Can I use an email notification? =
-Insert {save_the_date} in its message. HTML notifications use a simple table of links; text notifications use labeled URLs. No attachments are added.
+= Does Free attach calendar files or synchronize saved events? =
+No. Free adds email links; attendees choose and save or import events themselves. It does not send calendar invitations or synchronize later changes. Email .ics attachments are available in SaveTheDate Pro.
 
-= Can my theme customize the buttons? =
-Copy templates/buttons.php into your theme as savethedate/buttons.php. Keep escaping and accessible labels. Custom CSS can target stdgf-buttons and stdgf-buttons__item.
+= Are Free downloads restricted to registered attendees? =
+No. Free event details and downloads are public. Protected entry-specific downloads are available in SaveTheDate Pro.
 
-= Are settings deleted on uninstall? =
-No, by default. Opt in under Forms > Settings > SaveTheDate. Cleanup preserves forms and entries, skips deletion if the standalone companion edition is installed, and preserves settings if Gravity Forms is unavailable. Multisite cleanup respects each site's opt-in.
+= What about timezones, caching, and cleanup? =
+Enter local times in the selected timezone and avoid ambiguous daylight saving times. Exclude `/wp-json/savethedate/*` from long-lived caches and clear page caches after event changes. Settings are preserved on uninstall unless you opt into cleanup; forms and entries are preserved.
 
 == Screenshots ==
 
-1. Calendar buttons in a real event registration confirmation.
-2. Native Gravity Forms event settings, with local dates and timezone.
-3. Global Solid/Outline style, accent color and opt-in cleanup settings.
-4. Standalone shortcode buttons using Outline style.
+1. Real calendar buttons in a Gravity Forms confirmation, shown in a presentation frame.
+2. Real event settings for a shared fixed event, including dates, timezone, location, and description. Admin navigation is cropped from the capture.
+3. Real global settings for button style, accent color, and opt-in cleanup. Admin navigation is cropped from the capture.
 
 == Changelog ==
 
