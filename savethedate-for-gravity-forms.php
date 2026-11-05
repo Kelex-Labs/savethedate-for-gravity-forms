@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: SaveTheDate for Gravity Forms
- * Plugin URI: https://github.com/Kelex-Labs/savethedate-for-gravity-forms
+ * Plugin URI: https://wordpress.org/plugins/savethedate-for-gravity-forms/
  * Description: Add calendar buttons to fixed event confirmations and emails in Gravity Forms.
- * Version: 1.0.4
+ * Version: 1.0.5
  * Author: Kelex Labs
  * Author URI: https://github.com/Kelex-Labs
  * Requires at least: 6.2
@@ -25,8 +25,9 @@ function stdgf_bootstrap(): void {
 	if ( defined( 'STDGF_PRO_VERSION' ) ) {
 		return;
 	}
-	define( 'STDGF_VERSION', '1.0.4' );
+	define( 'STDGF_VERSION', '1.0.5' );
 	define( 'STDGF_FILE', __FILE__ );
+	add_filter( 'plugin_row_meta', 'stdgf_plugin_row_meta', 10, 2 );
 	if ( version_compare( PHP_VERSION, '7.4', '<' ) || version_compare( get_bloginfo( 'version' ), '6.2', '<' ) ) {
 		add_action( 'admin_notices', 'stdgf_dependency_notice' );
 		return;
@@ -62,4 +63,23 @@ function stdgf_dependency_notice(): void {
 	if ( 'plugins.php' === $pagenow && current_user_can( 'activate_plugins' ) ) {
 		echo '<div class="notice notice-warning is-dismissible"><p>' . esc_html__( 'SaveTheDate for Gravity Forms is inactive. It requires WordPress 6.2+, PHP 7.4+ and Gravity Forms 2.7+. Install and activate Gravity Forms 2.7 or newer, or update WordPress or PHP, to start using it.', 'savethedate-for-gravity-forms' ) . '</p></div>';
 	}
+}
+
+/**
+ * Add an "Upgrade to PRO" link beside the plugin's row links on the Plugins screen.
+ *
+ * @param array<int|string, string> $links Plugin row meta links.
+ * @param string                    $file  Plugin basename.
+ * @return array<int|string, string>
+ */
+function stdgf_plugin_row_meta( $links, $file ) {
+	if ( plugin_basename( __FILE__ ) !== $file ) {
+		return $links;
+	}
+	$links['stdgf-upgrade'] = sprintf(
+		'<a href="%1$s" target="_blank" rel="noopener noreferrer" style="font-weight:600;">%2$s</a>',
+		esc_url( 'https://kelex-labs.com/plugins/savethedate/' ),
+		esc_html__( 'Upgrade to PRO', 'savethedate-for-gravity-forms' )
+	);
+	return $links;
 }

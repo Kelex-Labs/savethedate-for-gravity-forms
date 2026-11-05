@@ -20,10 +20,27 @@ final class CalendarTest extends TestCase {
 		self::assertSame( 3600, $event->end->getTimestamp() - $event->start->getTimestamp() );
 	}
 	public function testInvalidDatesAndRangesAreRejected(): void {
-		foreach ( array( array( 'start_date' => '' ), array( 'start_date' => '2027-02-30' ), array( 'end_time' => '09:00' ), array( 'end_time' => '10:00' ), array( 'start_time' => '25:00' ), array( 'start_date' => '2027-03-14', 'end_date' => '2027-03-14', 'start_time' => '02:30', 'timezone' => 'America/New_York' ), array( 'all_day' => true, 'end_date' => '2027-06-30' ) ) as $changes ) {
+		foreach ( array( array( 'start_date' => '' ), array( 'start_time' => '' ), array( 'start_date' => '2027-02-30' ), array( 'end_time' => '09:00' ), array( 'end_time' => '10:00' ), array( 'start_time' => '25:00' ), array( 'start_date' => '2027-03-14', 'end_date' => '2027-03-14', 'start_time' => '02:30', 'timezone' => 'America/New_York' ), array( 'all_day' => true, 'end_date' => '2027-06-30' ) ) as $changes ) {
 			try { ( new EventFactory() )->create( $this->settings( $changes ), 1, 'Form', 'UTC', 'site' ); self::fail( 'Accepted invalid input.' ); }
 			catch ( InvalidArgumentException $exception ) { self::assertContains( $exception->getMessage(), array( 'invalid_date', 'invalid_event' ) ); }
 		}
+	}
+	public function testEndIsOptional(): void {
+		$factory = new EventFactory();
+		$event   = $factory->create( $this->settings( array( 'end_date' => '', 'end_time' => '' ) ), 1, 'Form', 'UTC', 'site' );
+		self::assertSame( 3600, $event->end->getTimestamp() - $event->start->getTimestamp() );
+		$event = $factory->create( $this->settings( array( 'end_date' => '' ) ), 1, 'Form', 'UTC', 'site' );
+		self::assertSame( '2027-07-01 11:30', $event->end->format( 'Y-m-d H:i' ) );
+		$event = $factory->create( $this->settings( array( 'end_date' => '2027-07-02', 'end_time' => '' ) ), 1, 'Form', 'UTC', 'site' );
+		self::assertSame( '2027-07-02 10:00', $event->end->format( 'Y-m-d H:i' ) );
+		$event = $factory->create( $this->settings( array( 'all_day' => true, 'end_date' => '' ) ), 1, 'Form', 'UTC', 'site' );
+		self::assertSame( '20270702', $event->date( $event->end ) );
+		$event = $factory->create( $this->settings( array( 'title' => '', 'location' => '', 'description' => '', 'url' => '', 'end_date' => '', 'end_time' => '' ) ), 1, 'Form', 'UTC', 'site' );
+		self::assertSame( 'Form', $event->title );
+		$ics = ( new IcsBuilder() )->build( $event, new DateTimeImmutable( '2026-01-01' ) );
+		self::assertStringNotContainsString( 'DESCRIPTION:', $ics );
+		self::assertStringNotContainsString( 'LOCATION:', $ics );
+		self::assertStringNotContainsString( 'URL:', $ics );
 	}
 	public function testAllDayEndIsExclusiveAcrossProvidersAndIcs(): void {
 		foreach ( array( '2027-07-01' => '20270702', '2027-07-03' => '20270704' ) as $inclusive => $exclusive ) {
