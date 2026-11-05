@@ -25,10 +25,19 @@ final class EventFactory {
 		$zone_name = (string) ( $settings['timezone'] ?? '' );
 		$zone      = $this->timezone( $zone_name, $fallback_zone );
 		$all_day   = ! empty( $settings['all_day'] );
-		$start     = $this->parse( (string) ( $settings['start_date'] ?? '' ), (string) ( $settings['start_time'] ?? '' ), $all_day, $zone );
-		$end       = $this->parse( (string) ( $settings['end_date'] ?? '' ), (string) ( $settings['end_time'] ?? '' ), $all_day, $zone );
+		$start_day = trim( (string) ( $settings['start_date'] ?? '' ) );
+		$start_at  = trim( (string) ( $settings['start_time'] ?? '' ) );
+		$start     = $this->parse( $start_day, $start_at, $all_day, $zone );
+		// The end is optional: it defaults to the start date, and a timed event without an end time lasts one hour.
+		$end_day = trim( (string) ( $settings['end_date'] ?? '' ) );
+		$end_day = '' === $end_day ? $start_day : $end_day;
+		$end_at  = trim( (string) ( $settings['end_time'] ?? '' ) );
 		if ( $all_day ) {
-			$end = $end->modify( '+1 day' );
+			$end = $this->parse( $end_day, '', true, $zone )->modify( '+1 day' );
+		} elseif ( '' === $end_at ) {
+			$end = $end_day === $start_day ? $start->modify( '+1 hour' ) : $this->parse( $end_day, $start_at, false, $zone );
+		} else {
+			$end = $this->parse( $end_day, $end_at, false, $zone );
 		}
 		$title = trim( (string) ( $settings['title'] ?? '' ) );
 		$uid   = 'stdgf-' . hash( 'sha256', $site_identity . '|' . $form_id . '|' . $start->format( 'c' ) ) . '@savethedate';

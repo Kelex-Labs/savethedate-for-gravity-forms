@@ -18,7 +18,14 @@ final class IcsBuilder {
 	 * @return string
 	 */
 	public function build( Event $event, \DateTimeImmutable $now ): string {
-		$lines = array( 'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Kelex Labs//SaveTheDate for Gravity Forms//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT', 'UID:' . $this->escape( $event->uid ), 'DTSTAMP:' . $now->setTimezone( new \DateTimeZone( 'UTC' ) )->format( 'Ymd\THis\Z' ), ( $event->all_day ? 'DTSTART;VALUE=DATE:' : 'DTSTART:' ) . $event->date( $event->start ), ( $event->all_day ? 'DTEND;VALUE=DATE:' : 'DTEND:' ) . $event->date( $event->end ), 'SUMMARY:' . $this->escape( $event->title ), 'DESCRIPTION:' . $this->escape( $event->description ), 'LOCATION:' . $this->escape( $event->location ) );
+		$lines = array( 'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Kelex Labs//SaveTheDate for Gravity Forms//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT', 'UID:' . $this->escape( $event->uid ), 'DTSTAMP:' . $now->setTimezone( new \DateTimeZone( 'UTC' ) )->format( 'Ymd\THis\Z' ), ( $event->all_day ? 'DTSTART;VALUE=DATE:' : 'DTSTART:' ) . $event->date( $event->start ), ( $event->all_day ? 'DTEND;VALUE=DATE:' : 'DTEND:' ) . $event->date( $event->end ), 'SUMMARY:' . $this->escape( $event->title ) );
+		// Optional TEXT properties are omitted when empty.
+		if ( '' !== trim( $event->description ) ) {
+			$lines[] = 'DESCRIPTION:' . $this->escape( $event->description );
+		}
+		if ( '' !== trim( $event->location ) ) {
+			$lines[] = 'LOCATION:' . $this->escape( $event->location );
+		}
 		if ( '' !== $event->url ) {
 			// URL is a URI, not a TEXT property; strip controls without TEXT escaping.
 			$lines[] = 'URL:' . preg_replace( '/[\x00-\x20\x7f]/', '', $event->url );

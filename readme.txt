@@ -4,7 +4,7 @@ Tags: gravity forms, add to calendar, ics, event registration, google calendar
 Requires at least: 6.2
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,6 +80,9 @@ No, by default. Opt in under Forms > Settings > SaveTheDate. Cleanup preserves f
 4. Standalone shortcode buttons using Outline style.
 
 == Changelog ==
+
+= 1.0.5 =
+* Security updates and optimizations.
 
 = 1.0.4 =
 * The missing-requirements notice now appears only on the Plugins screen and explains how to fix it.

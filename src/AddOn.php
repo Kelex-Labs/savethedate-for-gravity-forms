@@ -170,7 +170,7 @@ class AddOn extends \GFAddOn {
 		$fields   = array(
 			array(
 				'name'        => 'title',
-				'label'       => esc_html__( 'Event title', 'savethedate-for-gravity-forms' ),
+				'label'       => esc_html__( 'Event title (optional)', 'savethedate-for-gravity-forms' ),
 				'type'        => 'text',
 				'placeholder' => $form['title'] ?? '',
 			),
@@ -197,17 +197,19 @@ class AddOn extends \GFAddOn {
 			),
 			array(
 				'name'                => 'end_date',
-				'label'               => esc_html__( 'End date (inclusive for all-day events)', 'savethedate-for-gravity-forms' ),
+				'label'               => esc_html__( 'End date (optional, inclusive for all-day events)', 'savethedate-for-gravity-forms' ),
 				'type'                => 'text',
 				'input_type'          => 'date',
+				'description'         => esc_html__( 'Leave empty for an event that ends on its start date.', 'savethedate-for-gravity-forms' ),
 				'validation_callback' => array( $this, 'validate_event' ),
 			),
 			array(
-				'name'       => 'end_time',
-				'label'      => esc_html__( 'End time', 'savethedate-for-gravity-forms' ),
-				'type'       => 'text',
-				'input_type' => 'time',
-				'dependency' => array(
+				'name'        => 'end_time',
+				'label'       => esc_html__( 'End time (optional)', 'savethedate-for-gravity-forms' ),
+				'type'        => 'text',
+				'input_type'  => 'time',
+				'description' => esc_html__( 'Leave empty to end one hour after the start, or at the start time on a later end date.', 'savethedate-for-gravity-forms' ),
+				'dependency'  => array(
 					'field'  => 'all_day',
 					'values' => array( '0', '' ),
 				),
@@ -222,17 +224,17 @@ class AddOn extends \GFAddOn {
 			),
 			array(
 				'name'  => 'location',
-				'label' => esc_html__( 'Location', 'savethedate-for-gravity-forms' ),
+				'label' => esc_html__( 'Location (optional)', 'savethedate-for-gravity-forms' ),
 				'type'  => 'text',
 			),
 			array(
 				'name'  => 'description',
-				'label' => esc_html__( 'Description (plain text)', 'savethedate-for-gravity-forms' ),
+				'label' => esc_html__( 'Description (optional, plain text)', 'savethedate-for-gravity-forms' ),
 				'type'  => 'textarea',
 			),
 			array(
 				'name'       => 'url',
-				'label'      => esc_html__( 'Event URL', 'savethedate-for-gravity-forms' ),
+				'label'      => esc_html__( 'Event URL (optional)', 'savethedate-for-gravity-forms' ),
 				'type'       => 'text',
 				'input_type' => 'url',
 			),
@@ -284,7 +286,7 @@ class AddOn extends \GFAddOn {
 		try {
 			( new EventFactory() )->create( ( new EventService() )->sanitize( $settings ), 1, 'Event', wp_timezone_string(), home_url( '/' ) );
 		} catch ( \InvalidArgumentException $exception ) {
-			$field->set_error( esc_html__( 'Enter valid dates and times with the end after the start. An all-day end date includes that day. Times skipped by daylight saving changes are invalid.', 'savethedate-for-gravity-forms' ) );
+			$field->set_error( esc_html__( 'Enter a valid start date and time. If you set an end, it must be after the start. An all-day end date includes that day. Times skipped by daylight saving changes are invalid.', 'savethedate-for-gravity-forms' ) );
 		}
 	}
 
